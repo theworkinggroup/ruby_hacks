@@ -1,0 +1,8 @@
+RubyHacks
+=========
+
+This is a Rails plug-in collection of useful extensions to the Ruby core runtime.
+
+  % script/plugin install git://github.com/theworkinggroup/ruby_hacks.git
+
+(c) 2008-2009 The Working Group Inc. (http://twg.ca/)
