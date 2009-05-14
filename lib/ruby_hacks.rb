@@ -38,6 +38,42 @@ class Hash
       location.respond_to?(:keys) ? location[key] : nil
     end
   end
+
+  def merge_with!(*hashes)
+    hashes.flatten.each do |hash|
+      merge!(hash) if (hash && !hash.empty?)
+    end
+  end
+  
+  def merge_with(*hashes)
+    hashes.flatten.inject(self) do |chain, hash|
+      (hash && !hash.empty?) ? chain.merge(hash) : chain
+    end
+  end
+  
+  def downcase_keys
+    map_keys(&:downcase)
+  end
+
+  def downcase_keys!
+    map_keys!(&:downcase)
+  end
+  
+  def map_keys
+    inject({ }) do |h, (k, v)|
+      h[yield(k)] = v
+      h
+    end
+  end
+
+  def map_keys!
+    replace(
+      inject({ }) do |h, (k, v)|
+        h[yield(k)] = v
+        h
+      end
+    )
+  end
 end
 
 # -- String -----------------------------------------------------------------
