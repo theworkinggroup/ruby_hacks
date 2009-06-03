@@ -1,8 +1,5 @@
 module RubyHacks
-  VERSION = '0.0.1'
 end
-
-# -- Array ------------------------------------------------------------------
 
 class Array
   def to_h(*seeds, &block)
@@ -29,8 +26,6 @@ class Array
     end
   end
 end
-
-# -- Hash -------------------------------------------------------------------
 
 class Hash
   def dig(*path)
@@ -76,68 +71,47 @@ class Hash
   end
 end
 
-# -- String -----------------------------------------------------------------
-
-class String::HtmlSafe < String
-  HTML_EQUIVALENT = {
-    '<' => '&lt;',
-    '>' => '&gt',
-    '&' => '&amp;'
-  }
+class String::Random < String
+  RANDOM_LETTERS = [ ('a'..'z'), ('A'..'Z'), ('0'..'9') ].collect { |c| c.collect }.flatten.freeze
   
-  def initialize(string)
-    super(string.gsub(/[<>&]/) { |s| HTML_EQUIVALENT[s] })
+  def initialize(length = 12)
+    super((1..length).collect { RANDOM_LETTERS.rand }.to_s)
   end
 end
 
-class String::Random < String
-  CHARACTER_SET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.split(//).freeze
+class String::HtmlSafe < String
+  HTML_ENTITY_EQUIV = {
+    '<' => '&lt;',
+    '>' => '&gt;',
+    '&' => '&amp'
+  }
   
-  AVOID_WORDS = Regexp.new(%w[
-    ass a55 as5 a5s
-    bal
-    bit btc b1t
-    bul bll bls
-    but btu
-    chi ch1
-    cun cnt
-    dic dik d1c d1k
-    fag f4g
-    fuc fuk fck fcu fkn fkc
-    kik kyk k1k
-    jer jrk j3r
-    jew j3w
-    mot m0t mth mtr m7r
-    neg n3g ngr
-    nig n1g
-    pof p0f
-    poo po0 p00
-    que qu3 qee q3e qe3
-    shi sh1 shy
-    stf sfu
-    spi sp1
-    tar t4r trd
-    wtf wth
-    xxx
-  ].join('|'))
+  def initialize(string, escape = true)
+    super(string)
+    gsub!(/[\<\>\&]/) { |m| HTML_ENTITY_EQUIV[m] } if (escape)
+  end
   
-  def initialize(length)
-    while (true)
-      random_word = (1..length).inject('') { |b,x| b << CHARACTER_SET.rand }
-      
-      if (!AVOID_WORDS.match(random_word))
-        return super(random_word)
-      end
-    end
+  def html_safe
+    self
   end
 end
 
 class String
-  def self.rand(length = 16)
+  def self.rand(length = 12)
     Random.new(length)
   end
   
+  def keep_raw_html!
+    @raw_html = true
+    self
+  end
+  
+  def html_safe!
+    replace(HtmlSafe.new(self))
+    self
+  end
+  
   def html_safe
-    HtmlSafe.new(self)
+    @raw_html ? self : HtmlSafe.new(self)
   end
 end
