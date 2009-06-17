@@ -1,5 +1,5 @@
 require 'test_helper'
 
-class RubyHacksTest < ActiveSupport::TestCase
-  # No tests supplied as of yet
+class RubyHacksTest < Test::Unit::TestCase
+  # TODO: Unit tests!
 end
