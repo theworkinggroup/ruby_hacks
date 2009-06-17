@@ -25,6 +25,14 @@ class Array
       end
     end
   end
+  
+  if (defined?(ActiveSupport))
+    # Use ActiveSupport random number generator if available
+    
+    def rand
+      self[ActiveSupport::SecureRandom.random_number(length)]
+    end
+  end
 end
 
 class Hash
