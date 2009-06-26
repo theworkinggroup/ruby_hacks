@@ -29,8 +29,16 @@ class Array
   if (defined?(ActiveSupport))
     # Use ActiveSupport random number generator if available
     
+    def shuffle
+      sort_by { ActiveSupport::SecureRandom.random_number }
+    end
+    
     def rand
       self[ActiveSupport::SecureRandom.random_number(length)]
+    end
+  else
+    def shuffle
+      sort_by { rand }
     end
   end
 end
