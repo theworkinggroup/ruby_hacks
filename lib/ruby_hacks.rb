@@ -4,7 +4,7 @@ end
 class Array
   def to_h(*seeds, &block)
     case (seeds.length)
-    when 0:
+    when 0
       if (block_given?)
         inject({ }) do |h, v|
           h[v] = yield(v)
@@ -99,7 +99,7 @@ class String::HtmlSafe < String
   HTML_ENTITY_EQUIV = {
     '<' => '&lt;',
     '>' => '&gt;',
-    '&' => '&amp'
+    '&' => '&amp;'
   }
   
   def initialize(string, escape = true)
