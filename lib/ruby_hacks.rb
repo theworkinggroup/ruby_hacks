@@ -116,18 +116,20 @@ class String
   def self.rand(length = 12)
     Random.new(length)
   end
+
+  if (!String.instance_methods.include?(:html_safe) and !String.instance_methods.include?('html_safe'))
+    def keep_raw_html!
+      @raw_html = true
+      self
+    end
   
-  def keep_raw_html!
-    @raw_html = true
-    self
-  end
+    def html_safe!
+      replace(HtmlSafe.new(self))
+      self
+    end
   
-  def html_safe!
-    replace(HtmlSafe.new(self))
-    self
-  end
-  
-  def html_safe
-    @raw_html ? self : HtmlSafe.new(self)
+    def html_safe
+      @raw_html ? self : HtmlSafe.new(self)
+    end
   end
 end
