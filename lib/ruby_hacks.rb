@@ -95,6 +95,19 @@ class String::Random < String
   end
 end
 
+class String::RandomPhonetic < String
+  CONSONANTS = %w( b c d f g h j k l m n p qu r s t v w x z ch cr fr nd ng nk nt ph pr rd sh sl sp st th tr )
+  VOWELS = %w( a e i o u y )
+
+  def initialize(length = 12)
+    super(
+      (1 .. length).collect { |n|
+        (n % 2 != 0) ? CONSONANTS[rand(CONSONANTS.size)] : VOWELS[rand(VOWELS.size)]
+      }.to_s[0, length]
+    )
+  end
+end
+
 class String::HtmlSafe < String
   HTML_ENTITY_EQUIV = {
     '<' => '&lt;',
@@ -115,6 +128,10 @@ end
 class String
   def self.rand(length = 12)
     Random.new(length)
+  end
+
+  def self.rand_phonetic(length = 12)
+    RandomPhonetic.new(length)
   end
 
   if (!String.instance_methods.include?(:html_safe) and !String.instance_methods.include?('html_safe'))
